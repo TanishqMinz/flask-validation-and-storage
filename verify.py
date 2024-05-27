@@ -21,10 +21,10 @@ def verify(form):
     option = form.get("option", "").strip()
     
     if not validatetext(firstname, lastname):
-        errors["name"] = "First name and Last name must contain only letters."
+        errors["Name"] = "First name and Last name must contain only letters."
     if not validaterollno(rollno):
-        errors["rollno"] = "Roll number must be exactly 7 digits."
+        errors["Rollno"] = "Roll number must be exactly 7 digits."
     if not validateoption(option):
-        errors["option"] = "You must select an option."
+        errors["Option"] = "You must select an option."
         
     return errors if errors else None

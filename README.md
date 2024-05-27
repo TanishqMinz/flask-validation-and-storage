@@ -31,7 +31,11 @@ This is a simple attempt I made at using form validation and data storage. It us
     - On Windows:
 
         ```sh
-        $ .venv\Scripts\activate
+        With powershell as administrator:
+        
+        > Set-ExecutionPolicy RemoteSigned
+        > .\venv\Scripts\Activate.ps1
+        > Set-ExecutionPolicy Restricted
         ```
 
     - On macOS/Linux:

@@ -32,7 +32,8 @@ def main():
         else:
             create_user(firstname, email)
             return redirect(url_for('newacc'))
-    return render_template('form.html', errors=errors)
+    else:
+        return render_template('form.html', errors=errors)
 
 @app.route('/newacc')
 def newacc():
