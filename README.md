@@ -3,7 +3,7 @@
 
 ## Description
 
-This is a simple attempt I made at using form validation and data storage. It uses Flask to run the webpage, with some validation (e.g., names must be only alphabets with no spaces). It then stores the first name, along with an email in the format 'firstname@email.com' in an SQLAlchemy database. When submitting a valid form, it takes the user to either a logged-in screen or an account-made screen, depending on whether the email with the same name exists in the database or not.
+This is a simple attempt I made at using form validation and data storage. It uses Flask to run the webpage, with some validation (e.g., names must be only alphabets with no spaces). It then stores the first name, along with an email in the format 'firstname@email.com' in an SQLAlchemy database. When submitting a valid form, it takes the user to either a logged-in screen or an account-made screen, depending on whether the email with the same name exists in the database or not. You can also view the already created users names and email, update their names, and delete the users
 
 ## Technologies Used
 
