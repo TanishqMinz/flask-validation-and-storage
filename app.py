@@ -37,7 +37,7 @@ def main():
 
 @app.route('/newacc')
 def newacc():
-    return render_template('newacc.html')
+    return render_template("form.html")
 
 @app.route('/yay')
 @flask_login.login_required
@@ -48,6 +48,27 @@ def yay():
 def show_users():
     users = User.query.all()
     return render_template('users.html', users=users)
+
+@app.route('/update_user', methods=['POST'])
+def update_user():
+    user_id = request.form.get('user_id')
+    firstname = request.form.get('firstname')
+
+    user = User.query.get(user_id)
+    if user:
+        user.firstname = firstname
+        db.session.commit()
+
+    return redirect(url_for('show_users'))
+
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    user_id = request.form.get('user_id')
+    user = User.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for('show_users'))
 
 if __name__ == "__main__":
     app.run(debug=True)
