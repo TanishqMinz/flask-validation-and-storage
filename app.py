@@ -1,97 +1,74 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
-from flask_login import login_required, login_user, LoginManager, current_user, logout_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, request, render_template, redirect, url_for
+import flask_login
 from config import Config
-from models import User, db
-from forms import LoginForm, RegistrationForm, PasswordResetForm
+from models import db, User, create_user, get_user_by_email
+from verify import verify
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)  
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.route('/')
-def start():
-    return redirect(url_for('login'))
+@app.route("/form", methods=['GET'])
+def show():
+    return render_template("form.html")
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user)
-            return redirect(url_for('dashboard'))  
+@app.route('/submit', methods=['POST'])
+def main():
+    errors = verify(request.form)
+    if not errors:
+        firstname = request.form["firstname"]
+        email = f"{firstname}@email.com"
+        user = get_user_by_email(email)
+        if user:
+            flask_login.login_user(user)
+            return redirect(url_for('yay'))
         else:
-            flash('Login failed. Check your email and password.')
-    return render_template('login.html', form=form)
+            create_user(firstname, email)
+            return redirect(url_for('newacc'))
+    else:
+        return render_template('form.html', errors=errors)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(new_user)
+@app.route('/newacc')
+def newacc():
+    return render_template("form.html")
+
+@app.route('/yay')
+@flask_login.login_required
+def yay():
+    return render_template('yay.html')
+
+@app.route('/users', methods=['GET'])
+def show_users():
+    users = User.query.all()
+    return render_template('users.html', users=users)
+
+@app.route('/update_user', methods=['POST'])
+def update_user():
+    user_id = request.form.get('user_id')
+    firstname = request.form.get('firstname')
+
+    user = User.query.get(user_id)
+    if user:
+        user.firstname = firstname
         db.session.commit()
-        flash('Account created successfully! You can now log in.', 'success')
-        return redirect(url_for('login'))
-    elif request.method == 'POST':  
-        for field, errors in form.errors.items():
-            for error in errors:
-                flash(f'Error in {getattr(form, field).label.text}: {error}')
-    return render_template('register.html', form=form)
 
-@app.route('/reset_password', methods=['GET', 'POST'])
-def reset_password():
-    form = PasswordResetForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            if check_password_hash(user.password, form.new_password.data):
-                flash('New password cannot be the same as the old password.')
-            else:
-                hashed_password = generate_password_hash(form.new_password.data, method='pbkdf2:sha256')
-                user.password = hashed_password
-                db.session.commit()
-                flash('Your password has been updated!', 'success')
-                return redirect(url_for('login'))
-        else:
-            flash('No account found with that email.')
-    return render_template('password.html', form=form)
+    return redirect(url_for('show_users'))
 
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    user_id = request.form.get('user_id')
+    user = User.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for('show_users'))
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-@app.route('/delete_account', methods=['POST'])
-@login_required
-def delete_account():
-    if request.method == 'POST':
-        user_id = current_user.id
-        user = User.query.get(user_id)
-        if user:
-            db.session.delete(user)
-            db.session.commit()
-            logout_user()  
-            return redirect(url_for('login'))
-        else:
-            flash('Failed to delete account. Please try again.')
-    return redirect(url_for('dashboard'))
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

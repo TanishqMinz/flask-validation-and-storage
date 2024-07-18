@@ -3,15 +3,12 @@
 
 ## Description
 
-This is a simple attempt I made at using form validation and data storage. It uses Flask to run the webpage, with common webpage forms including Register, Login, and Reset Password. It also includes logout and delete account features. It uses Flask-WTForms and Flask_login for data validation and session management. The details like username, email and password are stored in Flask-SQLAlchemy using Werkzeug for encrypted password storage.
+This is a simple attempt I made at using form validation and data storage. It uses Flask to run the webpage, with some validation (e.g., names must be only alphabets with no spaces). It then stores the first name, along with an email in the format 'firstname@email.com' in an SQLAlchemy database. When submitting a valid form, it takes the user to either a logged-in screen or an account-made screen, depending on whether the email with the same name exists in the database or not. You can also view the already created users names and email, update their names, and delete the users
 
 ## Technologies Used
 
+- Regular Expressions
 - Flask
-- Flask-WTForms
-- Flask-login
-- Flask-SQLAlchemy
-- Werkzeug Security
 - HTML
 - Tailwind CSS
 
@@ -65,4 +62,4 @@ This is a simple attempt I made at using form validation and data storage. It us
     $ python app.py
     ```
 
-7. Go to http://127.0.0.1:5000/
+7. Go to http://127.0.0.1:5000/form
