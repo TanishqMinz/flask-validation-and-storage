@@ -55,7 +55,7 @@ def reset_password():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             if check_password_hash(user.password, form.new_password.data):
-                flash('New password cannot be the same as the old password.',)
+                flash('New password cannot be the same as the old password.')
             else:
                 hashed_password = generate_password_hash(form.new_password.data, method='pbkdf2:sha256')
                 user.password = hashed_password
