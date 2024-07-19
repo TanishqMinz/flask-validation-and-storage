@@ -3,12 +3,14 @@
 
 ## Description
 
-This is a simple attempt I made at using form validation and data storage. It uses Flask to run the webpage, with some validation (e.g., names must be only alphabets with no spaces). It then stores the first name, along with an email in the format 'firstname@email.com' in an SQLAlchemy database. When submitting a valid form, it takes the user to either a logged-in screen or an account-made screen, depending on whether the email with the same name exists in the database or not. You can also view the already created users names and email, update their names, and delete the users
-
+This is a simple attempt I made at using form validation and data storage. It uses Flask to run the webpage, using Flask-Login and Flask-WTForms for form validation and session management. The users details are stored in an SQLAlchemy database, with passwords stored in encrypted format for safety. It also features logout and delete functions, which are only available to a signed in user.
 ## Technologies Used
 
-- Regular Expressions
 - Flask
+- Flask-Login
+- Flask-WTForms
+- Flask-SQLAlchemy
+- Werkzeug.security
 - HTML
 - Tailwind CSS
 
@@ -50,16 +52,45 @@ This is a simple attempt I made at using form validation and data storage. It us
     $ python -m pip install -r requirements.txt
     ```
 
-5. Initialize the database:
+5. Install Tailwind CSS and configure it:
+
+    ```sh
+    $ npm ci tailwindcss
+    $ npx tailwindcss init
+    ```
+
+    - Make sure tailwind.config.js looks like this :
+
+    ```sh
+        /** @type {import('tailwindcss').Config} */
+        module.exports = {
+        mode: "jit",
+        content: ["./templates/**/*.html"],
+        theme: {
+            extend: {},
+        },
+        plugins: [],
+        }
+    ```
+
+    - Create a folder static with the file styles.css
+
+    - Run this script :
+
+    ```sh
+        npx tailwindcss -i .src/styles.css -o .static/styles.css --watch
+    ```
+
+6. Initialize the database:
 
     ```sh
     $ python init_db.py
     ```
     
-6. Run the script:
+7. Run the script:
 
     ```sh
     $ python app.py
     ```
 
-7. Go to http://127.0.0.1:5000/form
+8. Go to http://127.0.0.1:5000/

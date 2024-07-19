@@ -2,3 +2,6 @@ __pycache__
 .venv
 instance
 node_modules
+tailwind.config.js
+static/
+package.json
