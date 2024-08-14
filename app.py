@@ -71,7 +71,7 @@ def reset_password():
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
@@ -80,16 +80,15 @@ def logout():
 @app.route('/delete_account', methods=['POST'])
 @login_required
 def delete_account():
-    if request.method == 'POST':
-        user_id = current_user.id
-        user = User.query.get(user_id)
-        if user:
-            db.session.delete(user)
-            db.session.commit()
-            logout_user()  
-            return redirect(url_for('login'))
-        else:
-            flash('Failed to delete account. Please try again.')
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        logout_user()  
+        return redirect(url_for('login'))
+    else:
+        flash('Failed to delete account. Please try again.')
     return redirect(url_for('dashboard'))
 
 

@@ -1,22 +1,32 @@
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<nav>
-        <ul>
-          <li>
-            <a href="#">Home</a>
-          </li>
-          <li>
-            <a href="{{ url_for('logout') }}" onclick="confirm('Are you sure')">Logout</a>
-          </li>
-          <li>
-            <a href="{{ url_for('delete_account') }}"  onclick="confirm('Are you sure you want to delete your account?')">Delete Account</a>
-          </li>
-          </li>
+<body>
+  <nav class="bg-indigo-600 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <ul class="flex space-x-8">
+            <li>
+                <a href="#" class="text-white hover:text-gray-300">Home</a>
+            </li>
+            <li>
+                <form action="{{ url_for('logout') }}" method="post">
+                    <button type="submit" class="text-white hover:text-gray-300" onclick="return confirm('Are you sure you want to log out?')">Logout</button>
+                </form>
+            </li>
+            <li>
+                <form action="{{ url_for('delete_account') }}" method="post">
+                    <button type="submit" class="text-white hover:text-gray-300" onclick="return confirm('Are you sure you want to delete your account?')">Delete Account</button>
+                </form>
+            </li>
         </ul>
-</nav>
+    </div>
+  </nav>
 
+</body>
+
+</html>
