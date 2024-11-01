@@ -55,7 +55,7 @@ This is a simple attempt I made at using form validation and data storage. It us
 5. Install Tailwind CSS and configure it:
 
     ```sh
-    $ npm ci tailwindcss
+    $ npm install tailwindcss
     $ npx tailwindcss init
     ```
 
@@ -78,7 +78,7 @@ This is a simple attempt I made at using form validation and data storage. It us
     - Run this script :
 
     ```sh
-        npx tailwindcss -i .src/styles.css -o .static/styles.css --watch
+        npx tailwindcss -i src/styles.css -o static/styles.css --watch
     ```
 
 6. Initialize the database:
